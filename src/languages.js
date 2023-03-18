@@ -1,5 +1,11 @@
 export const languagesList = [
   {
+    no: "49",
+    name: "Spanish",
+    native: "Español",
+    code: "es",
+  },
+  {
     no: "16",
     name: "English",
     native: "English",
@@ -286,12 +292,6 @@ export const languagesList = [
     name: "Slovenian",
     native: "Slovensko",
     code: "sl",
-  },
-  {
-    no: "49",
-    name: "Spanish",
-    native: "Español",
-    code: "es",
   },
   {
     no: "50",

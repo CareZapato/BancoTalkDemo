@@ -4,6 +4,11 @@ import { languagesList } from './languages.js';
 import { trashOutline, cloudDownloadOutline } from 'ionicons/icons';
 import IonIcon from '@reacticons/ionicons';
 
+import ModalOne from './Modals/ModalOne';
+import ModalTwo from './Modals/ModalTwo';
+import ModalThree from './Modals/ModalThree';
+
+import { getOpenAIInfo } from './Service/OpenAiService';
 
 function SpeechToText() {
   let SpeechRecognition =
@@ -19,9 +24,30 @@ function SpeechToText() {
 
   const [languages, setLanguages] = useState([]); // Estado para almacenar los idiomas
 
+  const [showModalOne, setShowModalOne] = React.useState(false);
+  const [showModalTwo, setShowModalTwo] = React.useState(false);
+  const [showModalThree, setShowModalThree] = React.useState(false);
+
+  const [resultado, setResultado] = React.useState('');
+
+
   useEffect(() => {
     setLanguages(languagesList); // Obtener la lista de idiomas desde un archivo externo y almacenarla en el estado
   }, []);
+
+  async function handleOpenAI(texto) {
+    if(texto){
+      const formato = "Se entregará un texto del cual se puede deducir que quiere una de las 4 opciones: Depositar; Invertir; Preguntar estado de cuenta; Depositar a un contacto de mi lista"+ 
+      "En caso de que quiera Depositar extraeremos la información en el formato: ;Dep;Nombre_completo;Rut;Banco;Tipo_de_cuenta;Numero_de_cuenta;Cantidad."+ 
+      "En caso de que sea Invertir extraeremos la información en el formato: ;Inv;tipo_deposito;Cantidad;Dias."+
+      "En caso de que sea Preguntar el estado de cuenta nos entregara un valor: ;Ver;$50000;Deposito a plazo."+
+      "En caso de que sea Depositar a un contacto de mi lista extraeremos la información en el formato: ;Con;alias_o_nombre;monto.";
+      const prompt = formato+ "Recuerda que sólo debe entregarme una de las 4 opciones y el rut es formato chileno. El texto es el siguiente: "+texto;
+      const openaiResponse = await getOpenAIInfo(prompt);
+      
+      console.log(openaiResponse);
+    }
+  }
 
   // Función para manejar el botón de grabación
   function handleRecordButton() {
@@ -37,6 +63,24 @@ function SpeechToText() {
   function handleClearButton() {
     resultObj.innerHTML = ""; // Limpiar el texto convertido
   }
+
+  const handleOpenModalOne = () => {
+    setShowModalOne(true);
+  };
+  
+  const handleOpenModalTwo = () => {
+    setShowModalTwo(true);
+  };
+  
+  const handleOpenModalThree = () => {
+    setShowModalThree(true);
+  };
+  
+  const handleCloseModal = () => {
+    setShowModalOne(false);
+    setShowModalTwo(false);
+    setShowModalThree(false);
+  };
 
   // Función que realiza la conversión de voz a texto
   function speechToText() {
@@ -71,7 +115,7 @@ function SpeechToText() {
       recognition.onerror = (event) => {
         stopRecording();
         if (event.error === "no-speech") {
-          alert("No speech was detected. Stopping...");
+          //alert("No speech was detected. Stopping...");
         } else if (event.error === "audio-capture") {
           alert(
             "No microphone was found. Ensure that a microphone is installed."
@@ -86,13 +130,13 @@ function SpeechToText() {
       };
     } catch (error) {
       recording = false;
-  
       console.log(error);
     }
   }
 
   function stopRecording() {
     recognition.stop();
+    handleOpenAI(resultObj ? resultObj.innerHTML : '');
     recordBtn.querySelector("p").innerHTML = "Start Listening";
     recordBtn.classList.remove("recording");
     recording = false;
@@ -139,22 +183,25 @@ function SpeechToText() {
       </button>
       <p className="heading">Result :</p>
       <div
-        class="result"
-        spellcheck="false"
+        className="result"
+        spellCheck="false"
         placeholder="Text will be shown here"
       >
-        <p class="interim"></p>
+        <p className="interim"></p>
       </div>
       <div className="buttons">
-      <button className="btn clear" onClick={handleClearButton}>
-        <IonIcon name="trash-outline" />
-        <p>Clear</p>
-      </button>
-      <button className="btn download" onClick={handleDownloadButton}>
-        <IonIcon name="cloud-download-outline" />
-        <p>Download</p>
-      </button>
+        <button className="btn clear" onClick={handleClearButton}>
+          <IonIcon name="trash-outline" />
+          <p>Clear</p>
+        </button>
+        <button className="btn download" onClick={handleDownloadButton}>
+          <IonIcon name="cloud-download-outline" />
+          <p>Download</p>
+        </button>
       </div>
+      <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} />
+      <ModalTwo showModal={showModalTwo} handleCloseModal={handleCloseModal} />
+      <ModalThree showModal={showModalThree} handleCloseModal={handleCloseModal} />
     </div>
   );
 }
