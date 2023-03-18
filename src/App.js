@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './style.css'; // Importar el archivo de estilos
+import './style.css';
 import { languagesList } from './languages.js';
+import { trashOutline, cloudDownloadOutline } from 'ionicons/icons';
+import IonIcon from '@reacticons/ionicons';
 
 
 function SpeechToText() {
@@ -16,7 +18,6 @@ function SpeechToText() {
     resultObj = document.querySelector(".result");
 
   const [languages, setLanguages] = useState([]); // idioma por defecto
-  const [result, setResult] = useState(""); // idioma por defecto
 
   useEffect(() => {
     setLanguages(languagesList);
@@ -24,7 +25,6 @@ function SpeechToText() {
 
   // Función para manejar el botón de grabación
   function handleRecordButton() {
-    // Agregue el código para iniciar la grabación aquí
     if (!recording) {
       speechToText();
       recording = true;
@@ -35,7 +35,7 @@ function SpeechToText() {
 
   // Función para manejar el botón de grabación
   function handleClearButton() {
-    setResult("");
+    resultObj.innerHTML = "";
   }
 
   function speechToText() {
@@ -50,18 +50,17 @@ function SpeechToText() {
         const speechResult = event.results[0][0].transcript;
         //detect when intrim results
         if (event.results[0].isFinal) {
-          setResult(speechResult);
+          resultObj.innerHTML += " " + speechResult;
           resultObj.querySelector("p").remove();
         } else {
           //creative p with class interim if not already there
           if (!document.querySelector(".interim")) {
-            console.log("a");
             const interim = document.createElement("p");
             interim.classList.add("interim");
             resultObj.appendChild(interim);
           }
           //update the interim p with the speech result
-          document.querySelector(".interim").innerHTML = " " + speechResult;
+          document.querySelector(".interim").innerHTML= " " + speechResult;
         }
         downloadBtn.disabled = false;
       };
@@ -99,7 +98,7 @@ function SpeechToText() {
   }
 
   function handleDownloadButton() {
-    const text = result;
+    const text = resultObj.innerText;
     const filename = "speech.txt";
   
     const element = document.createElement("a");
@@ -132,24 +131,28 @@ function SpeechToText() {
       <div className="line"></div>
       <button className={`btn record ${recording ? 'active' : ''}`} onClick={handleRecordButton}>
         <div className="icon">
-          <ion-icon name="mic-outline"></ion-icon>
+          <IonIcon name="mic-outline" />
           <img src="bars.svg" alt="" />
         </div>
         <p>{recording ? 'Stop Listening' : 'Start Listening'}</p>
       </button>
       <p className="heading">Result :</p>
-      <div className="result" spellCheck="false" placeholder="Text will be shown here">
-        <p className="interim">{result}</p>
+      <div
+        class="result"
+        spellcheck="false"
+        placeholder="Text will be shown here"
+      >
+        <p class="interim"></p>
       </div>
       <div className="buttons">
-        <button className="btn clear" onClick={handleClearButton}>
-          <ion-icon name="trash-outline"></ion-icon>
-          <p>Clear</p>
-        </button>
-        <button className="btn download" onClick={handleDownloadButton}>
-          <ion-icon name="cloud-download-outline"></ion-icon>
-          <p>Download</p>
-        </button>
+      <button className="btn clear" onClick={handleClearButton}>
+        <IonIcon name="trash-outline" />
+        <p>Clear</p>
+      </button>
+      <button className="btn download" onClick={handleDownloadButton}>
+        <IonIcon name="cloud-download-outline" />
+        <p>Download</p>
+      </button>
       </div>
     </div>
   );
