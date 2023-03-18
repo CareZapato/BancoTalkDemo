@@ -11,61 +11,62 @@ function SpeechToText() {
   recognition,
   recording = false;
 
-  const recordBtn = document.querySelector(".record"),
-    downloadBtn = document.querySelector(".download"),
-    inputLanguage = document.querySelector("#language"),
-    clearBtn = document.querySelector(".clear"),
-    resultObj = document.querySelector(".result");
+  const recordBtn = document.querySelector(".record"), // Seleccionar el botón de grabación
+    downloadBtn = document.querySelector(".download"), // Seleccionar el botón de descarga
+    inputLanguage = document.querySelector("#language"), // Seleccionar el menú desplegable de idiomas
+    clearBtn = document.querySelector(".clear"), // Seleccionar el botón de borrar texto
+    resultObj = document.querySelector(".result"); // Seleccionar el elemento donde se mostrará el texto convertido
 
-  const [languages, setLanguages] = useState([]); // idioma por defecto
+  const [languages, setLanguages] = useState([]); // Estado para almacenar los idiomas
 
   useEffect(() => {
-    setLanguages(languagesList);
+    setLanguages(languagesList); // Obtener la lista de idiomas desde un archivo externo y almacenarla en el estado
   }, []);
 
   // Función para manejar el botón de grabación
   function handleRecordButton() {
     if (!recording) {
-      speechToText();
+      speechToText(); // Si no se está grabando, iniciar la grabación
       recording = true;
     } else {
-      stopRecording();
+      stopRecording(); // Si se está grabando, detener la grabación
     }
   }
 
-  // Función para manejar el botón de grabación
+  // Función para manejar el botón de borrar texto
   function handleClearButton() {
-    resultObj.innerHTML = "";
+    resultObj.innerHTML = ""; // Limpiar el texto convertido
   }
 
+  // Función que realiza la conversión de voz a texto
   function speechToText() {
     try {
-      recognition = new SpeechRecognition();
-      recognition.lang = inputLanguage.value;
-      recognition.interimResults = true;
-      recordBtn.classList.add("recording");
-      recordBtn.querySelector("p").innerHTML = "Listening...";
-      recognition.start();
+      recognition = new SpeechRecognition(); // Inicializar la API de reconocimiento de voz
+      recognition.lang = inputLanguage.value; // Establecer el idioma seleccionado en el menú desplegable
+      recognition.interimResults = true; // Habilitar los resultados provisionales
+      recordBtn.classList.add("recording"); // Añadir la clase 'recording' al botón de grabación
+      recordBtn.querySelector("p").innerHTML = "Listening..."; // Cambiar el texto del botón de grabación a 'Listening...'
+      recognition.start(); // Iniciar la grabación
       recognition.onresult = (event) => {
-        const speechResult = event.results[0][0].transcript;
-        //detect when intrim results
+        const speechResult = event.results[0][0].transcript; // Obtener el texto convertido
+        // Detectar si los resultados son finales
         if (event.results[0].isFinal) {
-          resultObj.innerHTML += " " + speechResult;
-          resultObj.querySelector("p").remove();
+          resultObj.innerHTML += " " + speechResult; // Añadir el texto convertido al elemento correspondiente
+          resultObj.querySelector("p").remove(); // Quitar el elemento provisional
         } else {
-          //creative p with class interim if not already there
+          // Si aún no hay un elemento provisional, crearlo
           if (!document.querySelector(".interim")) {
             const interim = document.createElement("p");
             interim.classList.add("interim");
             resultObj.appendChild(interim);
           }
-          //update the interim p with the speech result
+          // Actualizar el elemento provisional con el texto convertido
           document.querySelector(".interim").innerHTML= " " + speechResult;
         }
-        downloadBtn.disabled = false;
+        downloadBtn.disabled = false; // Habilitar el botón de descarga
       };
       recognition.onspeechend = () => {
-        speechToText();
+        speechToText(); // Reiniciar la grabación
       };
       recognition.onerror = (event) => {
         stopRecording();
