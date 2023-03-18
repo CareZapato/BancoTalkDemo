@@ -41,10 +41,11 @@ function SpeechToText() {
       "En caso de que quiera Depositar extraeremos la información en el formato: ;Dep;Nombre_completo;Rut;Banco;Tipo_de_cuenta;Numero_de_cuenta;Cantidad."+ 
       "En caso de que sea Invertir extraeremos la información en el formato: ;Inv;tipo_deposito;Cantidad;Dias."+
       "En caso de que sea Preguntar el estado de cuenta nos entregara un valor: ;Ver;$50000;Deposito a plazo."+
-      "En caso de que sea Depositar a un contacto de mi lista extraeremos la información en el formato: ;Con;alias_o_nombre;monto.";
+      "En caso de que sea Depositar a un contacto de mi lista extraeremos la información de un texto que incluye el alias. La respuesta debe ser en el formato: ;Con;alias;monto.";
       const prompt = formato+ "Recuerda que sólo debe entregarme una de las 4 opciones y el rut es formato chileno. El texto es el siguiente: "+texto;
       const openaiResponse = await getOpenAIInfo(prompt);
-      switch (openaiResponse[0].modo) {
+      console.log("openaiResponse:",openaiResponse);
+      switch (openaiResponse.modo) {
         case 'Dep':
           setResultado(openaiResponse);
           handleOpenModalOne();
@@ -214,7 +215,7 @@ function SpeechToText() {
           <p>Download</p>
         </button>
       </div>
-      <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado[0]} />
+      <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado} />
       <ModalTwo showModal={showModalTwo} handleCloseModal={handleCloseModal} />
       <ModalThree showModal={showModalThree} handleCloseModal={handleCloseModal} />
     </div>

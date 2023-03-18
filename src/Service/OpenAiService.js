@@ -1,6 +1,6 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = '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';
 
 async function getOpenAIInfo(prompt) {
   const response = await fetch('https://api.openai.com/v1/completions', {
@@ -30,8 +30,9 @@ function formatJson(splitInfo) {
                 "nombre":splitInfo[2],
                 "rut":splitInfo[3],
                 "banco":splitInfo[4],
-                "tipoCuenta":splitInfo[5],
-                "monto":splitInfo[6],
+                "tipo_cuenta":splitInfo[5],
+                "n_cuenta":splitInfo[6],
+                "monto":splitInfo[7],
             }
             return jsonAccion;
         case 'Inv':
@@ -51,15 +52,15 @@ function formatJson(splitInfo) {
             return jsonAccion;
         case 'Con':
             jsonAccion = {
-                "aliasNombre":splitInfo[2],
+                "aliasNombre":splitInfo[2]
             }
             const cuentasCoincidentes = 
                 cuentas_agregadas.filter(
-                    cuenta => cuenta.alias === jsonAccion.aliasNombre || 
-                    cuenta.nombre === jsonAccion.aliasNombre
+                    cuenta => jsonAccion.aliasNombre.includes(cuenta.alias)
                 );
             cuentasCoincidentes[0].modo = "Dep";
-            return cuentasCoincidentes;
+            cuentasCoincidentes[0].monto= splitInfo[3];
+            return cuentasCoincidentes[0];
         default:
           console.log(`Lo siento, no existe ${splitInfo[1]}.`);
     }
