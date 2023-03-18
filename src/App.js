@@ -28,7 +28,7 @@ function SpeechToText() {
   const [showModalTwo, setShowModalTwo] = React.useState(false);
   const [showModalThree, setShowModalThree] = React.useState(false);
 
-  const [resultado, setResultado] = React.useState('');
+  const [resultado, setResultado] = React.useState({});
 
 
   useEffect(() => {
@@ -44,7 +44,22 @@ function SpeechToText() {
       "En caso de que sea Depositar a un contacto de mi lista extraeremos la información en el formato: ;Con;alias_o_nombre;monto.";
       const prompt = formato+ "Recuerda que sólo debe entregarme una de las 4 opciones y el rut es formato chileno. El texto es el siguiente: "+texto;
       const openaiResponse = await getOpenAIInfo(prompt);
-      
+      switch (openaiResponse[0].modo) {
+        case 'Dep':
+          setResultado(openaiResponse);
+          handleOpenModalOne();
+          break;
+        case 'Inv':
+          setResultado(openaiResponse);
+          handleOpenModalTwo();
+          break;
+        case 'Ver':
+          setResultado(openaiResponse);
+          handleOpenModalThree();
+          break;
+        default:
+          console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
+      }
       console.log(openaiResponse);
     }
   }
@@ -199,7 +214,7 @@ function SpeechToText() {
           <p>Download</p>
         </button>
       </div>
-      <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} />
+      <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado[0]} />
       <ModalTwo showModal={showModalTwo} handleCloseModal={handleCloseModal} />
       <ModalThree showModal={showModalThree} handleCloseModal={handleCloseModal} />
     </div>

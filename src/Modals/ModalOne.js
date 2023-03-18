@@ -1,7 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-const ModalOne = ({ showModal, handleCloseModal }) => {
+const ModalOne = ({ showModal, handleCloseModal, cuenta }) => {
   return (
     <>
       {showModal && (
@@ -10,8 +10,19 @@ const ModalOne = ({ showModal, handleCloseModal }) => {
             <span className="close" onClick={handleCloseModal}>
               &times;
             </span>
-            <h2>Modal One</h2>
-            <p>This is the content of Modal One</p>
+            <h2>Confirmar transferencia bancaria</h2>
+            <p>Por favor, confirme los siguientes datos:</p>
+            <ul>
+              <li>Nombre: {cuenta.nombre}</li>
+              <li>RUT: {cuenta.rut}</li>
+              <li>Banco: {cuenta.banco}</li>
+              <li>Tipo de cuenta: {cuenta.tipo_cuenta}</li>
+              <li>Número de cuenta: {cuenta.n_cuenta}</li>
+              <li>Alias: {cuenta.alias}</li>
+              <li>Monto a transferir: ${cuenta.monto}</li>
+            </ul>
+            <button onClick={handleCloseModal}>Cancelar</button>
+            <button>Confirmar</button>
           </div>
         </div>
       )}

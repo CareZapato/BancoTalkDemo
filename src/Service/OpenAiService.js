@@ -1,6 +1,6 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
 
-const OPENAI_API_KEY = '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';
+const OPENAI_API_KEY = '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';
 
 async function getOpenAIInfo(prompt) {
   const response = await fetch('https://api.openai.com/v1/completions', {
@@ -18,7 +18,6 @@ async function getOpenAIInfo(prompt) {
 
   const data = await response.json();
   const splitInfo = data.choices[0].text.trim().split(";");
-  console.log(formatJson(splitInfo));
   return formatJson(splitInfo);
 }
 
@@ -27,6 +26,7 @@ function formatJson(splitInfo) {
     switch (splitInfo[1]) {
         case 'Dep':
             jsonAccion = {
+                "modo":splitInfo[1],
                 "nombre":splitInfo[2],
                 "rut":splitInfo[3],
                 "banco":splitInfo[4],
@@ -36,6 +36,7 @@ function formatJson(splitInfo) {
             return jsonAccion;
         case 'Inv':
             jsonAccion = {
+                "modo":splitInfo[1],
                 "tipoDeposito":splitInfo[2],
                 "cantidad":splitInfo[3],
                 "dias":splitInfo[4]
@@ -43,6 +44,7 @@ function formatJson(splitInfo) {
             return jsonAccion;
         case 'Ver':
             jsonAccion = {
+                "modo":splitInfo[1],
                 "cantidad":splitInfo[2],
                 "tipoDeposito":splitInfo[3],
             }
@@ -56,7 +58,7 @@ function formatJson(splitInfo) {
                     cuenta => cuenta.alias === jsonAccion.aliasNombre || 
                     cuenta.nombre === jsonAccion.aliasNombre
                 );
-            console.log("cuentasCoincidentes: "+cuentasCoincidentes);
+            cuentasCoincidentes[0].modo = "Dep";
             return cuentasCoincidentes;
         default:
           console.log(`Lo siento, no existe ${splitInfo[1]}.`);
