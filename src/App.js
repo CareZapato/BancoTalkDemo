@@ -12,7 +12,8 @@ function SpeechToText() {
   const recordBtn = document.querySelector(".record"),
     downloadBtn = document.querySelector(".download"),
     inputLanguage = document.querySelector("#language"),
-    clearBtn = document.querySelector(".clear");
+    clearBtn = document.querySelector(".clear"),
+    resultObj = document.querySelector(".result");
 
   const [languages, setLanguages] = useState([]); // idioma por defecto
   const [result, setResult] = useState(""); // idioma por defecto
@@ -24,11 +25,11 @@ function SpeechToText() {
   // Función para manejar el botón de grabación
   function handleRecordButton() {
     // Agregue el código para iniciar la grabación aquí
-    if(recording){
-      recording = !recording;
-    }else{
-      recording = !recording;
+    if (!recording) {
       speechToText();
+      recording = true;
+    } else {
+      stopRecording();
     }
   }
 
@@ -50,13 +51,14 @@ function SpeechToText() {
         //detect when intrim results
         if (event.results[0].isFinal) {
           setResult(speechResult);
-          //result.querySelector("p").remove();
+          resultObj.querySelector("p").remove();
         } else {
           //creative p with class interim if not already there
           if (!document.querySelector(".interim")) {
+            console.log("a");
             const interim = document.createElement("p");
             interim.classList.add("interim");
-            result.appendChild(interim);
+            resultObj.appendChild(interim);
           }
           //update the interim p with the speech result
           document.querySelector(".interim").innerHTML = " " + speechResult;
