@@ -1,8 +1,8 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
-
-const OPENAI_API_KEY = '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';
+import {OPENAI_API_KEY} from '../key';
 
 async function getOpenAIInfo(prompt) {
+  console.log("OPENAI_API_KEY: "+OPENAI_API_KEY);
   const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'POST',
     headers: {
