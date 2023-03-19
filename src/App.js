@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 import { languagesList } from './languages.js';
-import { trashOutline, cloudDownloadOutline } from 'ionicons/icons';
 import IonIcon from '@reacticons/ionicons';
 
 import ModalOne from './Modals/ModalOne';
@@ -9,6 +8,7 @@ import ModalTwo from './Modals/ModalTwo';
 import ModalThree from './Modals/ModalThree';
 
 import { getOpenAIInfo } from './Service/OpenAiService';
+import { FORMATO_RESPUESTAS } from './constants';
 
 function SpeechToText() {
   let SpeechRecognition =
@@ -37,14 +37,8 @@ function SpeechToText() {
 
   async function handleOpenAI(texto) {
     if(texto){
-      const formato = "Se entregará un texto del cual se puede deducir que quiere una de las 4 opciones: Depositar; Invertir; Preguntar estado de cuenta; Depositar a un contacto de mi lista"+ 
-      "En caso de que quiera Depositar extraeremos la información en el formato: ;Dep;Nombre_completo;Rut;Banco;Tipo_de_cuenta;Numero_de_cuenta;Cantidad."+ 
-      "En caso de que sea Invertir extraeremos la información en el formato: ;Inv;tipo_deposito;Cantidad;Dias."+
-      "En caso de que sea Preguntar el estado de cuenta nos entregara un valor: ;Ver;$50000;Deposito a plazo."+
-      "En caso de que sea Depositar a un contacto de mi lista extraeremos la información de un texto que incluye el alias. La respuesta debe ser en el formato: ;Con;alias;monto.";
-      const prompt = formato+ "Recuerda que sólo debe entregarme una de las 4 opciones y el rut es formato chileno. El texto es el siguiente: "+texto;
+      const prompt = FORMATO_RESPUESTAS + " El texto es el siguiente: "+texto;
       const openaiResponse = await getOpenAIInfo(prompt);
-      console.log("openaiResponse:",openaiResponse);
       switch (openaiResponse.modo) {
         case 'Dep':
           setResultado(openaiResponse);
@@ -61,7 +55,6 @@ function SpeechToText() {
         default:
           console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
       }
-      console.log(openaiResponse);
     }
   }
 
@@ -216,8 +209,8 @@ function SpeechToText() {
         </button>
       </div>
       <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado} />
-      <ModalTwo showModal={showModalTwo} handleCloseModal={handleCloseModal} />
-      <ModalThree showModal={showModalThree} handleCloseModal={handleCloseModal} />
+      <ModalTwo showModal={showModalTwo} handleCloseModal={handleCloseModal} inversion={resultado}/>
+      <ModalThree showModal={showModalThree} handleCloseModal={handleCloseModal} estado={resultado}/>
     </div>
   );
 }

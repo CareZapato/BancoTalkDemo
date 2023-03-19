@@ -1,5 +1,6 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
-import {API_KEY} from '../key';
+import {perfil} from '../Models/Perfil';
+import {API_KEY, RUT_LOGUEADO} from '../constants';
 
 async function getOpenAIInfo(prompt) {
   console.log("API_KEY: "+API_KEY);
@@ -36,20 +37,22 @@ function formatJson(splitInfo) {
             }
             return jsonAccion;
         case 'Inv':
+            
             jsonAccion = {
                 "modo":splitInfo[1],
-                "tipoDeposito":splitInfo[2],
-                "cantidad":splitInfo[3],
+                "tipo_deposito":splitInfo[2],
+                "monto":splitInfo[3],
                 "dias":splitInfo[4]
             }
+            console.log("jsonAccion:",jsonAccion);
             return jsonAccion;
         case 'Ver':
             jsonAccion = {
                 "modo":splitInfo[1],
-                "cantidad":splitInfo[2],
-                "tipoDeposito":splitInfo[3],
+                "rut":RUT_LOGUEADO
             }
-            return jsonAccion;
+            perfil.modo = splitInfo[1];
+            return perfil;
         case 'Con':
             jsonAccion = {
                 "aliasNombre":splitInfo[2]

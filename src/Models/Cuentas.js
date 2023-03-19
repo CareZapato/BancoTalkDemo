@@ -1,14 +1,6 @@
 
   export const cuentas_agregadas = [
     {
-      nombre: "Pablo Barrera",
-      rut: "16870871-8",
-      banco: "Banco Santander",
-      tipo_cuenta: "Corriente",
-      n_cuenta: "000 157 12253",
-      alias: "zapato"
-    },
-    {
       nombre: "María Pérez",
       rut: "11223344-5",
       banco: "Banco Estado",
