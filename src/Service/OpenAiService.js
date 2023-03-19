@@ -1,13 +1,13 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
-import {OPENAI_API_KEY} from '../key';
+import {API_KEY} from '../key';
 
 async function getOpenAIInfo(prompt) {
-  console.log("OPENAI_API_KEY: "+OPENAI_API_KEY);
+  console.log("API_KEY: "+API_KEY);
   const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${OPENAI_API_KEY}`
+      'Authorization': `Bearer ${API_KEY}`
     },
     body: JSON.stringify({
       model: "text-davinci-003",

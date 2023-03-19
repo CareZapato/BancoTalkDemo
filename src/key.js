@@ -1,1 +1,1 @@
-export const OPENAI_API_KEY = 'key';
+export const API_KEY = 'key prueba';
