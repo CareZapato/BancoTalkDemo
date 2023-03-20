@@ -1,4 +1,5 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
+import {deudas_servicios} from '../Models/Deudas';
 import {perfil} from '../Models/Perfil';
 import {API_KEY, RUT_LOGUEADO} from '../constants';
 
@@ -22,8 +23,34 @@ async function getOpenAIInfo(prompt) {
   return formatJson(splitInfo);
 }
 
+function arrayDeudas(servicios) {
+    const nuevas_deudas_servicios = [];
+    for (let i = 0; i < deudas_servicios.length; i++) {
+        const deuda = deudas_servicios[i];
+        for (let j = 0; j < servicios.length; j++) {
+          const servicio = servicios[j];
+          if (deuda.servicio.toLowerCase().includes(servicio.toLowerCase())) {
+            let monto_pago = 0;
+            const siguiente_servicio = servicios[j+1];
+            if (siguiente_servicio && siguiente_servicio.toLowerCase() === "total") {
+              monto_pago = deuda.deuda;
+            } else {
+              const monto = Number(siguiente_servicio);
+              if (!isNaN(monto)) {
+                monto_pago = monto;
+              }
+            }
+            nuevas_deudas_servicios.push({...deuda, monto_pago});
+            break;
+          }
+        }
+    }
+    return nuevas_deudas_servicios;
+}
+
 function formatJson(splitInfo) {
     let jsonAccion = {};
+    console.log("splitInfo: ",splitInfo);
     switch (splitInfo[1]) {
         case 'Dep':
             jsonAccion = {
@@ -43,14 +70,12 @@ function formatJson(splitInfo) {
                 "monto":splitInfo[3],
                 "dias":splitInfo[4]
             }
-            console.log("jsonAccion:",jsonAccion);
             return jsonAccion;
         case 'Ver':
             jsonAccion = {
                 "modo":splitInfo[1]
             }
             perfil.modo = splitInfo[1];
-            console.log("perfil: ",perfil);
             return perfil;
         case 'Con':
             jsonAccion = {
@@ -63,6 +88,23 @@ function formatJson(splitInfo) {
             cuentasCoincidentes[0].modo = "Dep";
             cuentasCoincidentes[0].monto= splitInfo[3];
             return cuentasCoincidentes[0];
+        case 'Ser-P':
+            jsonAccion = {
+                "modo":splitInfo[1],
+            }
+            const deudasCoincidentes = arrayDeudas(splitInfo);
+            jsonAccion.cuentas = deudasCoincidentes;
+            jsonAccion.perfil = perfil;
+            console.log("jsonAccion: ",jsonAccion);
+            return jsonAccion;
+        case 'Ser-V':
+            jsonAccion = {
+                "modo":splitInfo[1],
+            }
+            jsonAccion.cuentas = deudas_servicios;
+            jsonAccion.perfil = perfil;
+            console.log("jsonAccion: ",jsonAccion);
+            return jsonAccion;
         case 'PQR':
             jsonAccion = {
                 "modo":splitInfo[1],

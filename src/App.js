@@ -9,6 +9,8 @@ import Modal_Deposito from './Modals/Modal_Deposito';
 import Modal_Inversion from './Modals/Modal_Inversion';
 import Modal_Estado from './Modals/Modal_Estado';
 import Modal_PagoQR from './Modals/Modal_PagoQR';
+import Modal_EstadoDeudas from './Modals/Modal_EstadoDeudas';
+import Modal_PagarDeudas from './Modals/Modal_PagarDeudas';
 
 function SpeechToText() {
   let SpeechRecognition =
@@ -28,7 +30,8 @@ function SpeechToText() {
   const [showModalTwo, setShowModalTwo] = React.useState(false);
   const [showModalThree, setShowModalThree] = React.useState(false);
   const [showModalFour, setShowModalFour] = React.useState(false);
-
+  const [showModalFive, setShowModalFive] = React.useState(false);
+  const [showModalSix, setShowModalSix] = React.useState(false);
   const [resultado, setResultado] = React.useState({});
 
 
@@ -38,7 +41,7 @@ function SpeechToText() {
 
   async function handleOpenAI(texto) {
     if(texto){
-      const prompt = FORMATO_RESPUESTAS + " El texto es el siguiente: "+texto;
+      const prompt = FORMATO_RESPUESTAS + " El TextoEntrada es el siguiente: "+texto;
       const openaiResponse = await getOpenAIInfo(prompt);
       switch (openaiResponse.modo) {
         case 'Dep':
@@ -57,6 +60,14 @@ function SpeechToText() {
           setResultado(openaiResponse);
           handleOpenModalFour();
           break;
+        case 'Ser-P':
+          setResultado(openaiResponse);
+          handleOpenModalFive();
+        break;
+        case 'Ser-V':
+          setResultado(openaiResponse);
+          handleOpenModalSix();
+        break;
         default:
           console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
       }
@@ -93,12 +104,22 @@ function SpeechToText() {
   const handleOpenModalFour = () => {
     setShowModalFour(true);
   };
+
+  const handleOpenModalFive = () => {
+    setShowModalFive(true);
+  };
+
+  const handleOpenModalSix = () => {
+    setShowModalSix(true);
+  };
   
   const handleCloseModal = () => {
     setShowModalOne(false);
     setShowModalTwo(false);
     setShowModalThree(false);
     setShowModalFour(false);
+    setShowModalFive(false);
+    setShowModalSix(false);
   };
 
   // Función que realiza la conversión de voz a texto
@@ -222,6 +243,8 @@ function SpeechToText() {
       <Modal_Inversion showModal={showModalTwo} handleCloseModal={handleCloseModal} inversion={resultado}/>
       <Modal_Estado showModal={showModalThree} handleCloseModal={handleCloseModal} perfil={resultado}/>
       <Modal_PagoQR showModal={showModalFour} handleCloseModal={handleCloseModal} pago={resultado}/>
+      <Modal_PagarDeudas showModal={showModalFive} handleCloseModal={handleCloseModal} pagar={resultado}/>
+      <Modal_EstadoDeudas showModal={showModalSix} handleCloseModal={handleCloseModal} deudas={resultado}/>
     </div>
   );
 }
