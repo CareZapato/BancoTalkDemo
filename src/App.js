@@ -3,12 +3,12 @@ import './style.css';
 import { languagesList } from './languages.js';
 import IonIcon from '@reacticons/ionicons';
 
-import ModalOne from './Modals/ModalOne';
-import ModalTwo from './Modals/ModalTwo';
-import ModalThree from './Modals/ModalThree';
-
 import { getOpenAIInfo } from './Service/OpenAiService';
 import { FORMATO_RESPUESTAS } from './constants';
+import Modal_Deposito from './Modals/Modal_Deposito';
+import Modal_Inversion from './Modals/Modal_Inversion';
+import Modal_Estado from './Modals/Modal_Estado';
+import Modal_PagoQR from './Modals/Modal_PagoQR';
 
 function SpeechToText() {
   let SpeechRecognition =
@@ -27,6 +27,7 @@ function SpeechToText() {
   const [showModalOne, setShowModalOne] = React.useState(false);
   const [showModalTwo, setShowModalTwo] = React.useState(false);
   const [showModalThree, setShowModalThree] = React.useState(false);
+  const [showModalFour, setShowModalFour] = React.useState(false);
 
   const [resultado, setResultado] = React.useState({});
 
@@ -51,6 +52,10 @@ function SpeechToText() {
         case 'Ver':
           setResultado(openaiResponse);
           handleOpenModalThree();
+          break;
+        case 'PQR':
+          setResultado(openaiResponse);
+          handleOpenModalFour();
           break;
         default:
           console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
@@ -84,11 +89,16 @@ function SpeechToText() {
   const handleOpenModalThree = () => {
     setShowModalThree(true);
   };
+
+  const handleOpenModalFour = () => {
+    setShowModalFour(true);
+  };
   
   const handleCloseModal = () => {
     setShowModalOne(false);
     setShowModalTwo(false);
     setShowModalThree(false);
+    setShowModalFour(false);
   };
 
   // Función que realiza la conversión de voz a texto
@@ -208,9 +218,10 @@ function SpeechToText() {
           <p>Download</p>
         </button>
       </div>
-      <ModalOne showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado} />
-      <ModalTwo showModal={showModalTwo} handleCloseModal={handleCloseModal} inversion={resultado}/>
-      <ModalThree showModal={showModalThree} handleCloseModal={handleCloseModal} estado={resultado}/>
+      <Modal_Deposito showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado} />
+      <Modal_Inversion showModal={showModalTwo} handleCloseModal={handleCloseModal} inversion={resultado}/>
+      <Modal_Estado showModal={showModalThree} handleCloseModal={handleCloseModal} perfil={resultado}/>
+      <Modal_PagoQR showModal={showModalFour} handleCloseModal={handleCloseModal} pago={resultado}/>
     </div>
   );
 }

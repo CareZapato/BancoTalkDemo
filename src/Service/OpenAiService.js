@@ -37,7 +37,6 @@ function formatJson(splitInfo) {
             }
             return jsonAccion;
         case 'Inv':
-            
             jsonAccion = {
                 "modo":splitInfo[1],
                 "tipo_deposito":splitInfo[2],
@@ -48,10 +47,10 @@ function formatJson(splitInfo) {
             return jsonAccion;
         case 'Ver':
             jsonAccion = {
-                "modo":splitInfo[1],
-                "rut":RUT_LOGUEADO
+                "modo":splitInfo[1]
             }
             perfil.modo = splitInfo[1];
+            console.log("perfil: ",perfil);
             return perfil;
         case 'Con':
             jsonAccion = {
@@ -64,6 +63,12 @@ function formatJson(splitInfo) {
             cuentasCoincidentes[0].modo = "Dep";
             cuentasCoincidentes[0].monto= splitInfo[3];
             return cuentasCoincidentes[0];
+        case 'PQR':
+            jsonAccion = {
+                "modo":splitInfo[1],
+                "monto":splitInfo[2],
+            };
+            return jsonAccion;;
         default:
           console.log(`Lo siento, no existe ${splitInfo[1]}.`);
     }

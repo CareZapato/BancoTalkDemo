@@ -1,7 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-const ModalOne = ({ showModal, handleCloseModal, cuenta }) => {
+const Modal_Deposito = ({ showModal, handleCloseModal, cuenta }) => {
   return (
     <>
       {showModal && (
@@ -30,4 +30,4 @@ const ModalOne = ({ showModal, handleCloseModal, cuenta }) => {
   );
 };
 
-export default ModalOne;
+export default Modal_Deposito;

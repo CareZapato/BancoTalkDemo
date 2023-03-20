@@ -1,7 +1,7 @@
 import React from 'react';
 import './Modal.css';
 
-const ModalTwo = ({ showModal, handleCloseModal, inversion }) => {
+const Modal_Inversion = ({ showModal, handleCloseModal, inversion }) => {
   function getFechaConDias(dias) {
     const fecha = new Date(); // Fecha actual
     fecha.setDate(fecha.getDate() + dias); // Agregamos la cantidad de días
@@ -35,4 +35,4 @@ const ModalTwo = ({ showModal, handleCloseModal, inversion }) => {
   );
 };
 
-export default ModalTwo;
+export default Modal_Inversion;
