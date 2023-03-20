@@ -1,4 +1,4 @@
-export const API_KEY = '';
+export const API_KEY = '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';
 
 export const RUT_LOGUEADO = "16870871-8";
 

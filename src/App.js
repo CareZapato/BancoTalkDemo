@@ -108,7 +108,7 @@ function SpeechToText() {
       recognition.lang = inputLanguage.value; // Establecer el idioma seleccionado en el menú desplegable
       recognition.interimResults = true; // Habilitar los resultados provisionales
       recordBtn.classList.add("recording"); // Añadir la clase 'recording' al botón de grabación
-      recordBtn.querySelector("p").innerHTML = "Listening..."; // Cambiar el texto del botón de grabación a 'Listening...'
+      recordBtn.querySelector("p").innerHTML = "Escuchando..."; // Cambiar el texto del botón de grabación a 'Listening...'
       recognition.start(); // Iniciar la grabación
       recognition.onresult = (event) => {
         const speechResult = event.results[0][0].transcript; // Obtener el texto convertido
@@ -137,14 +137,14 @@ function SpeechToText() {
           //alert("No speech was detected. Stopping...");
         } else if (event.error === "audio-capture") {
           alert(
-            "No microphone was found. Ensure that a microphone is installed."
+            "No se encuentra el microfono. Asegurate que el microfono este conectado."
           );
         } else if (event.error === "not-allowed") {
           alert("Permission to use microphone is blocked.");
         } else if (event.error === "aborted") {
-          alert("Listening Stopped.");
+          alert("Escucha detenida.");
         } else {
-          alert("Error occurred in recognition: " + event.error);
+          alert("Ocurrio un error al grabar: " + event.error);
         }
       };
     } catch (error) {
@@ -156,7 +156,7 @@ function SpeechToText() {
   function stopRecording() {
     recognition.stop();
     handleOpenAI(resultObj ? resultObj.innerHTML : '');
-    recordBtn.querySelector("p").innerHTML = "Start Listening";
+    recordBtn.querySelector("p").innerHTML = "Escuchando...";
     recordBtn.classList.remove("recording");
     recording = false;
   }
@@ -179,10 +179,10 @@ function SpeechToText() {
 
   return (
     <div className="container">
-      <p className="heading">Speech to Text</p>
+      <p className="heading">VoiceBank</p>
       <div className="options">
         <div className="language">
-          <p>Language</p>
+          <p>Idioma</p>
           <select name="input-language" id="language">
             {languages.map((language) => (
               <option key={language.code} value={language.code}>
@@ -198,9 +198,9 @@ function SpeechToText() {
           <IonIcon name="mic-outline" />
           <img src="bars.svg" alt="" />
         </div>
-        <p>{recording ? 'Stop Listening' : 'Start Listening'}</p>
+        <p>{recording ? 'Detener la escucha' : 'Escuchar'}</p>
       </button>
-      <p className="heading">Result :</p>
+      <p className="heading">Petición:</p>
       <div
         className="result"
         spellCheck="false"
@@ -211,11 +211,11 @@ function SpeechToText() {
       <div className="buttons">
         <button className="btn clear" onClick={handleClearButton}>
           <IonIcon name="trash-outline" />
-          <p>Clear</p>
+          <p>Borrar</p>
         </button>
         <button className="btn download" onClick={handleDownloadButton}>
           <IonIcon name="cloud-download-outline" />
-          <p>Download</p>
+          <p>Descargar</p>
         </button>
       </div>
       <Modal_Deposito showModal={showModalOne} handleCloseModal={handleCloseModal} cuenta={resultado} />
