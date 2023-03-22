@@ -4,13 +4,14 @@ import { languagesList } from './languages.js';
 import IonIcon from '@reacticons/ionicons';
 
 import { getOpenAIInfo } from './Service/OpenAiService';
-import { FORMATO_RESPUESTAS } from './constants';
+import { FORMATO_RESPUESTAS, FORMATO_URL } from './constants';
 import Modal_Deposito from './Modals/Modal_Deposito';
 import Modal_Inversion from './Modals/Modal_Inversion';
 import Modal_Estado from './Modals/Modal_Estado';
 import Modal_PagoQR from './Modals/Modal_PagoQR';
 import Modal_EstadoDeudas from './Modals/Modal_EstadoDeudas';
 import Modal_PagarDeudas from './Modals/Modal_PagarDeudas';
+import Modal_EstadoDeudasApi from  './Modals/Modal_EstadoDeudasAPI';
 
 function SpeechToText() {
   let SpeechRecognition =
@@ -32,6 +33,8 @@ function SpeechToText() {
   const [showModalFour, setShowModalFour] = React.useState(false);
   const [showModalFive, setShowModalFive] = React.useState(false);
   const [showModalSix, setShowModalSix] = React.useState(false);
+  const [showModalSeven, setShowModalSeven] = React.useState(false);
+
   const [resultado, setResultado] = React.useState({});
 
 
@@ -63,11 +66,15 @@ function SpeechToText() {
         case 'Ser-P':
           setResultado(openaiResponse);
           handleOpenModalFive();
-        break;
+          break;
         case 'Ser-V':
           setResultado(openaiResponse);
           handleOpenModalSix();
-        break;
+          break;
+        case 'Deu-V':
+          setResultado(openaiResponse);
+          handleOpenModalSeven();
+          break;
         default:
           console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
       }
@@ -112,6 +119,10 @@ function SpeechToText() {
   const handleOpenModalSix = () => {
     setShowModalSix(true);
   };
+
+  const handleOpenModalSeven = () => {
+    setShowModalSeven(true);
+  };
   
   const handleCloseModal = () => {
     setShowModalOne(false);
@@ -120,6 +131,7 @@ function SpeechToText() {
     setShowModalFour(false);
     setShowModalFive(false);
     setShowModalSix(false);
+    setShowModalSeven(false);
   };
 
   // Función que realiza la conversión de voz a texto
@@ -245,6 +257,7 @@ function SpeechToText() {
       <Modal_PagoQR showModal={showModalFour} handleCloseModal={handleCloseModal} pago={resultado}/>
       <Modal_PagarDeudas showModal={showModalFive} handleCloseModal={handleCloseModal} pagar={resultado}/>
       <Modal_EstadoDeudas showModal={showModalSix} handleCloseModal={handleCloseModal} deudas={resultado}/>
+      <Modal_EstadoDeudasApi showModal={showModalSeven} handleCloseModal={handleCloseModal} deudas={resultado}/>
     </div>
   );
 }

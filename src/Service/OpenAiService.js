@@ -1,5 +1,6 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
 import {deudas_servicios} from '../Models/Deudas';
+import {deudaAPI} from '../Models/DeudaAPI';
 import {perfil} from '../Models/Perfil';
 import {API_KEY, RUT_LOGUEADO} from '../constants';
 
@@ -110,7 +111,16 @@ function formatJson(splitInfo) {
                 "modo":splitInfo[1],
                 "monto":splitInfo[2],
             };
-            return jsonAccion;;
+            return jsonAccion;
+        case 'Deu-V':
+            jsonAccion = {
+                "modo":splitInfo[1],
+                "rut":splitInfo[2]
+            };
+            jsonAccion.rut = splitInfo[2];
+            jsonAccion.deuda_api = deudaAPI;
+            console.log("jsonAccion:",jsonAccion);
+            return jsonAccion;
         default:
           console.log(`Lo siento, no existe ${splitInfo[1]}.`);
     }
