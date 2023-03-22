@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 import { languagesList } from './languages.js';
+import { modosPromptList } from './modos';
 import IonIcon from '@reacticons/ionicons';
 
 import { getOpenAIInfo } from './Service/OpenAiService';
-import { FORMATO_RESPUESTAS, FORMATO_URL } from './constants';
+
 import Modal_Deposito from './Modals/Modal_Deposito';
 import Modal_Inversion from './Modals/Modal_Inversion';
 import Modal_Estado from './Modals/Modal_Estado';
@@ -22,10 +23,12 @@ function SpeechToText() {
   const recordBtn = document.querySelector(".record"), // Seleccionar el botón de grabación
     downloadBtn = document.querySelector(".download"), // Seleccionar el botón de descarga
     inputLanguage = document.querySelector("#language"), // Seleccionar el menú desplegable de idiomas
+    inputModo = document.querySelector("#modo"), // Seleccionar el menú desplegable de idiomas
     clearBtn = document.querySelector(".clear"), // Seleccionar el botón de borrar texto
     resultObj = document.querySelector(".result"); // Seleccionar el elemento donde se mostrará el texto convertido
 
   const [languages, setLanguages] = useState([]); // Estado para almacenar los idiomas
+  const [modosPrompt, setModosPrompt] = useState([]); // Estado para almacenar los modos
 
   const [showModalOne, setShowModalOne] = React.useState(false);
   const [showModalTwo, setShowModalTwo] = React.useState(false);
@@ -40,12 +43,13 @@ function SpeechToText() {
 
   useEffect(() => {
     setLanguages(languagesList); // Obtener la lista de idiomas desde un archivo externo y almacenarla en el estado
+    setModosPrompt(modosPromptList);
   }, []);
 
-  async function handleOpenAI(texto) {
+
+  async function handleOpenAI(texto, modo) {
     if(texto){
-      const prompt = FORMATO_RESPUESTAS + " El TextoEntrada es el siguiente: "+texto;
-      const openaiResponse = await getOpenAIInfo(prompt);
+      const openaiResponse = await getOpenAIInfo(texto, modo);
       switch (openaiResponse.modo) {
         case 'Dep':
           setResultado(openaiResponse);
@@ -188,7 +192,7 @@ function SpeechToText() {
 
   function stopRecording() {
     recognition.stop();
-    handleOpenAI(resultObj ? resultObj.innerHTML : '');
+    handleOpenAI(resultObj ? resultObj.innerHTML : '', inputModo.value);
     recordBtn.querySelector("p").innerHTML = "Escuchando...";
     recordBtn.classList.remove("recording");
     recording = false;
@@ -220,6 +224,14 @@ function SpeechToText() {
             {languages.map((language) => (
               <option key={language.code} value={language.code}>
                 {language.name}
+              </option>
+            ))}
+          </select>
+          <p>Modo</p>
+          <select name="input-modo" id="modo">
+            {modosPrompt.map((modo) => (
+              <option key={modo.no} value={modo.no}>
+                {modo.name}
               </option>
             ))}
           </select>

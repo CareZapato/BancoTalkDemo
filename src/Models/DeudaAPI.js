@@ -13,7 +13,22 @@ export const deudaAPI = {
                 "between30To89Days": "0",
                 "over90Days": "0",
                 "total": "43434343"
+            },
+            {
+                "institution": "Banco del Sur",
+                "currentDebt": "12500000",
+                "between30To89Days": "0",
+                "over90Days": "0",
+                "total": "12500000"
+            },
+            {
+                "institution": "Banco Central",
+                "currentDebt": "3000000",
+                "between30To89Days": "50000",
+                "over90Days": "100000",
+                "total": "3150000"
             }
+            
         ],
         "indirectDebt": [],
         "credits": {
@@ -26,6 +41,16 @@ export const deudaAPI = {
                 {
                     "institution": "Scotiabank Chile",
                     "direct": "76677677",
+                    "indirect": "0"
+                },
+                {
+                    "institution": "Banco Falabella",
+                    "direct": "12000000",
+                    "indirect": "3000000"
+                },
+                {
+                    "institution": "Banco Ripley",
+                    "direct": "45000000",
                     "indirect": "0"
                 }
             ],
