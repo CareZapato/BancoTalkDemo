@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './style.css';
 import { languagesList } from './languages.js';
+import { modosPromptList } from './modos';
 import IonIcon from '@reacticons/ionicons';
 
 import { getOpenAIInfo } from './Service/OpenAiService';
-import { FORMATO_RESPUESTAS } from './constants';
+
 import Modal_Deposito from './Modals/Modal_Deposito';
 import Modal_Inversion from './Modals/Modal_Inversion';
 import Modal_Estado from './Modals/Modal_Estado';
 import Modal_PagoQR from './Modals/Modal_PagoQR';
 import Modal_EstadoDeudas from './Modals/Modal_EstadoDeudas';
 import Modal_PagarDeudas from './Modals/Modal_PagarDeudas';
+import Modal_EstadoDeudasApi from  './Modals/Modal_EstadoDeudasAPI';
 
 function SpeechToText() {
   let SpeechRecognition =
@@ -21,10 +23,12 @@ function SpeechToText() {
   const recordBtn = document.querySelector(".record"), // Seleccionar el botón de grabación
     downloadBtn = document.querySelector(".download"), // Seleccionar el botón de descarga
     inputLanguage = document.querySelector("#language"), // Seleccionar el menú desplegable de idiomas
+    inputModo = document.querySelector("#modo"), // Seleccionar el menú desplegable de idiomas
     clearBtn = document.querySelector(".clear"), // Seleccionar el botón de borrar texto
     resultObj = document.querySelector(".result"); // Seleccionar el elemento donde se mostrará el texto convertido
 
   const [languages, setLanguages] = useState([]); // Estado para almacenar los idiomas
+  const [modosPrompt, setModosPrompt] = useState([]); // Estado para almacenar los modos
 
   const [showModalOne, setShowModalOne] = React.useState(false);
   const [showModalTwo, setShowModalTwo] = React.useState(false);
@@ -32,17 +36,20 @@ function SpeechToText() {
   const [showModalFour, setShowModalFour] = React.useState(false);
   const [showModalFive, setShowModalFive] = React.useState(false);
   const [showModalSix, setShowModalSix] = React.useState(false);
+  const [showModalSeven, setShowModalSeven] = React.useState(false);
+
   const [resultado, setResultado] = React.useState({});
 
 
   useEffect(() => {
     setLanguages(languagesList); // Obtener la lista de idiomas desde un archivo externo y almacenarla en el estado
+    setModosPrompt(modosPromptList);
   }, []);
 
-  async function handleOpenAI(texto) {
+
+  async function handleOpenAI(texto, modo) {
     if(texto){
-      const prompt = FORMATO_RESPUESTAS + " El TextoEntrada es el siguiente: "+texto;
-      const openaiResponse = await getOpenAIInfo(prompt);
+      const openaiResponse = await getOpenAIInfo(texto, modo);
       switch (openaiResponse.modo) {
         case 'Dep':
           setResultado(openaiResponse);
@@ -63,11 +70,15 @@ function SpeechToText() {
         case 'Ser-P':
           setResultado(openaiResponse);
           handleOpenModalFive();
-        break;
+          break;
         case 'Ser-V':
           setResultado(openaiResponse);
           handleOpenModalSix();
-        break;
+          break;
+        case 'Deu-V':
+          setResultado(openaiResponse);
+          handleOpenModalSeven();
+          break;
         default:
           console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
       }
@@ -112,6 +123,10 @@ function SpeechToText() {
   const handleOpenModalSix = () => {
     setShowModalSix(true);
   };
+
+  const handleOpenModalSeven = () => {
+    setShowModalSeven(true);
+  };
   
   const handleCloseModal = () => {
     setShowModalOne(false);
@@ -120,6 +135,7 @@ function SpeechToText() {
     setShowModalFour(false);
     setShowModalFive(false);
     setShowModalSix(false);
+    setShowModalSeven(false);
   };
 
   // Función que realiza la conversión de voz a texto
@@ -176,7 +192,7 @@ function SpeechToText() {
 
   function stopRecording() {
     recognition.stop();
-    handleOpenAI(resultObj ? resultObj.innerHTML : '');
+    handleOpenAI(resultObj ? resultObj.innerHTML : '', inputModo.value);
     recordBtn.querySelector("p").innerHTML = "Escuchando...";
     recordBtn.classList.remove("recording");
     recording = false;
@@ -208,6 +224,14 @@ function SpeechToText() {
             {languages.map((language) => (
               <option key={language.code} value={language.code}>
                 {language.name}
+              </option>
+            ))}
+          </select>
+          <p>Modo</p>
+          <select name="input-modo" id="modo">
+            {modosPrompt.map((modo) => (
+              <option key={modo.no} value={modo.no}>
+                {modo.name}
               </option>
             ))}
           </select>
@@ -245,6 +269,7 @@ function SpeechToText() {
       <Modal_PagoQR showModal={showModalFour} handleCloseModal={handleCloseModal} pago={resultado}/>
       <Modal_PagarDeudas showModal={showModalFive} handleCloseModal={handleCloseModal} pagar={resultado}/>
       <Modal_EstadoDeudas showModal={showModalSix} handleCloseModal={handleCloseModal} deudas={resultado}/>
+      <Modal_EstadoDeudasApi showModal={showModalSeven} handleCloseModal={handleCloseModal} deudas={resultado}/>
     </div>
   );
 }

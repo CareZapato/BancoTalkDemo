@@ -1,9 +1,31 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
 import {deudas_servicios} from '../Models/Deudas';
+import {deudaAPI} from '../Models/DeudaAPI';
 import {perfil} from '../Models/Perfil';
 import {API_KEY, RUT_LOGUEADO} from '../constants';
+import {generateDeudaAPI} from '../Service/DeudasAPIRandomService'
+import { 
+    FORMATO_RESPUESTAS_Deudas_Bancos,
+    FORMATO_RESPUESTAS_Servicio_Basicos,
+    FORMATO_RESPUESTAS_transacciones_bancarias
+} from '../constants';
 
-async function getOpenAIInfo(prompt) {
+async function getOpenAIInfo(texto, modo) {
+ let textoPrompt = '';
+ switch (modo) {
+    case '01':
+        textoPrompt =  FORMATO_RESPUESTAS_Deudas_Bancos + " El TextoEntrada es el siguiente: "+texto;
+        break;
+    case '02':
+        textoPrompt =  FORMATO_RESPUESTAS_Servicio_Basicos + " El TextoEntrada es el siguiente: "+texto;
+        break;
+    case '03':
+        textoPrompt =  FORMATO_RESPUESTAS_transacciones_bancarias + " El texto es el siguiente: "+texto;
+        break;
+    default:
+        console.log(`Lo siento, no existe el modo ${modo}.`);
+  }
+
   console.log("API_KEY: "+API_KEY);
   const response = await fetch('https://api.openai.com/v1/completions', {
     method: 'POST',
@@ -13,7 +35,7 @@ async function getOpenAIInfo(prompt) {
     },
     body: JSON.stringify({
       model: "text-davinci-003",
-      prompt: prompt,
+      prompt: textoPrompt,
       max_tokens: 100
     })
   });
@@ -48,9 +70,20 @@ function arrayDeudas(servicios) {
     return nuevas_deudas_servicios;
 }
 
+function arrayToJson(arr) {
+    const data = [];
+    for (let i = 2; i < arr.length - 3; i += 3) {
+      data.push({
+        entidad: arr[i],
+        tipo: arr[i + 1],
+        monto: arr[i + 2],
+      });
+    }
+    return data;
+  }
+
 function formatJson(splitInfo) {
     let jsonAccion = {};
-    console.log("splitInfo: ",splitInfo);
     switch (splitInfo[1]) {
         case 'Dep':
             jsonAccion = {
@@ -95,7 +128,6 @@ function formatJson(splitInfo) {
             const deudasCoincidentes = arrayDeudas(splitInfo);
             jsonAccion.cuentas = deudasCoincidentes;
             jsonAccion.perfil = perfil;
-            console.log("jsonAccion: ",jsonAccion);
             return jsonAccion;
         case 'Ser-V':
             jsonAccion = {
@@ -103,14 +135,27 @@ function formatJson(splitInfo) {
             }
             jsonAccion.cuentas = deudas_servicios;
             jsonAccion.perfil = perfil;
-            console.log("jsonAccion: ",jsonAccion);
             return jsonAccion;
         case 'PQR':
             jsonAccion = {
                 "modo":splitInfo[1],
                 "monto":splitInfo[2],
             };
-            return jsonAccion;;
+            return jsonAccion;
+        case 'Deu-V':
+            jsonAccion = {
+                "modo":splitInfo[1]
+            };
+            jsonAccion.rut = splitInfo[2];
+            jsonAccion.deuda_api = generateDeudaAPI(splitInfo[2]);
+            return jsonAccion;
+        case 'Deu-AM':
+            jsonAccion = {
+                "modo":splitInfo[1]
+            };
+            jsonAccion.rut = splitInfo[2];
+            jsonAccion.lista_pagar = arrayToJson(splitInfo);
+            return jsonAccion;
         default:
           console.log(`Lo siento, no existe ${splitInfo[1]}.`);
     }
