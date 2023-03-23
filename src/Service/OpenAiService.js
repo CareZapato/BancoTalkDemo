@@ -7,7 +7,7 @@ import {
 		FORMATO_RESPUESTAS_Servicio_Basicos,
 		FORMATO_RESPUESTAS_transacciones_bancarias
 } from '../constants';
-import {generateDeudaAPI} from './DeudasAPIRandomService'
+import { postAll } from './DeudaApiService'
 
 async function getOpenAIInfo(texto, modo) {
 		let textoPrompt = '';
@@ -81,8 +81,9 @@ function arrayToJson(arr) {
 		return data;
 }
 
-function formatJson(splitInfo) {
+async function formatJson(splitInfo) {
 		let jsonAccion = {};
+		console.log('caso ',splitInfo);
 		switch (splitInfo[1]) {
 				case 'Dep':
 						jsonAccion = {
@@ -146,7 +147,9 @@ function formatJson(splitInfo) {
 								'modo': splitInfo[1]
 						};
 						jsonAccion.rut = splitInfo[2];
-						jsonAccion.deuda_api = generateDeudaAPI(splitInfo[2]);
+						//const data = localStorage.getItem('credentials') ? JSON.parse(localStorage.getItem('credentials')) : '';
+						jsonAccion.deuda_api = await postAll();
+						console.log('jsonAccion.deuda_api ', jsonAccion.deuda_api);
 						return jsonAccion;
 				case 'Deu-AM':
 						jsonAccion = {
