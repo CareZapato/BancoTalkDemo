@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {Button, Form } from 'react-bootstrap';
-import {useForm} from '../hooks/useForm';
 import { postLogin } from '../Service/LoginApiService';
 import { useNavigate } from "react-router-dom";
 import { validateRUT } from 'validar-rut';
@@ -8,16 +7,14 @@ import { validateRUT } from 'validar-rut';
 const Login = () => {
 
 	  const navigate = useNavigate();
-		const {rut, password, onInputChange } = useForm({
-				rut: '',
-				password: ''
-		});
+		const [rut, setRut] = useState('');
+		const [password, setPassword] = useState('');
 
 		const onSubmit = async (e) => {
 			e.preventDefault();
+			console.log(Form)
 	
 			const isValid = validateRUT(rut);
-
 			if (isValid) {
 				localStorage.setItem('rut', rut);
 				localStorage.setItem('password', password);
@@ -30,7 +27,6 @@ const Login = () => {
 			} else {
 				alert('El rut ingresado no es válido');
 			}
-		
 		}
 
 		return (
@@ -44,15 +40,15 @@ const Login = () => {
 								</figure>
 								<Form onSubmit={onSubmit}>
 										<div>
-												<Form.Group className="mb-3" controlId="rut" >
+												<Form.Group className="mb-3" controlId="rut">
 														<Form.Label>Ingresa tu RUN</Form.Label>
-														<Form.Control type="text" placeholder="9999999-9" value={rut} onChange={onInputChange}/>
+														<Form.Control type="text" placeholder="9999999-9" defaultValue={rut} onChange={e => setRut(e.target.value)} />
 												</Form.Group>
 										</div>
 
 										<Form.Group className="mb-3" controlId="password">
 												<Form.Label>Ingresa tu ClaveÚnica</Form.Label>
-												<Form.Control type="password" placeholder="Ab12345" value={password} onChange={onInputChange}/>
+												<Form.Control type="password" placeholder="Ab12345" value={password} onChange={e => setPassword(e.target.value)}/>
 										</Form.Group>
 										<Button variant="primary" type="submit">
 												Ingresa
