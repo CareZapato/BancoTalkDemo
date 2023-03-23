@@ -16,24 +16,22 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
             <br></br>
             <h3>Una lista con las deudas con entidades.</h3>
             <ul>
-              <li>Nombre: {deudas.deuda_api.data.name}</li>
-              <li>Rut: {deudas.deuda_api.data.rut}</li>
+              <li>Nombre: {deudas.deuda_api.name}</li>
+              <li>Rut: {deudas.deuda_api.rut}</li>
             </ul>
             <br></br>
             <h3>Débito.</h3>
             <table>
                 <thead>
               <tr>
-                <th>Empresa</th>
-                <th>Deuda Actual</th>
-                <th>Deuda</th>
+                <th><b>Empresa</b></th>
+                <th><b>Deuda Actual</b></th>
               </tr>
             </thead>
               <tbody>
-                {deudas.deuda_api.data.directDebt.map((debt) => (
+                {deudas.deuda_api.directDebt.map((debt) => (
                   <tr key={debt.institution}>
                     <td>{debt.institution}</td>
-                    <td className="saldo">$ {debt.currentDebt}</td>
                     <td className="saldo">$ {debt.total}</td>
                   </tr>
                 ))}
@@ -44,18 +42,10 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
             <table>
                 <thead>
               <tr>
-                <th>Empresa</th>
-                <th>Deuda</th>
+                <th><b>Total</b></th>
+                <th>{deudas.deuda_api.totalDeudas}</th>
               </tr>
             </thead>
-              <tbody>
-                {deudas.deuda_api.data.credits.lines.map((deuda) => (
-                  <tr key={deuda.institution}>
-                    <td>{deuda.institution}</td>
-                    <td className="saldo">$ {deuda.direct}</td>
-                  </tr>
-                ))}
-              </tbody>
             </table>
             <button onClick={handleCloseModal}>Cancelar</button>
             <button>Confirmar</button>
