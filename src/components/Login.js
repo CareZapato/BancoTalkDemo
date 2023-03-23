@@ -1,19 +1,36 @@
 import React from 'react';
-import {Button, Form} from 'react-bootstrap';
+import {Button, Form } from 'react-bootstrap';
 import {useForm} from '../hooks/useForm';
-import { validateRUT } from "validar-rut";
+import { postLogin } from '../Service/LoginApiService';
+import { useNavigate } from "react-router-dom";
+import { validateRUT } from 'validar-rut';
 
 const Login = () => {
 
+	  const navigate = useNavigate();
 		const {rut, password, onInputChange } = useForm({
-				rut: '26565996-9',
-				password: '123456'
+				rut: '',
+				password: ''
 		});
 
-		const onSubmit = (e) => {
-				e.preventDefault();
-				const valided = validateRUT(rut);
-				console.log({rut, password});
+		const onSubmit = async (e) => {
+			e.preventDefault();
+	
+			const isValid = validateRUT(rut);
+
+			if (isValid) {
+				localStorage.setItem('rut', rut);
+				localStorage.setItem('password', password);
+			
+				const response = await postLogin({rut, password})
+				if (response.code === "200") {
+					localStorage.setItem('user', JSON.stringify(response.data));
+					navigate("/chat");
+				}
+			} else {
+				alert('El rut ingresado no es válido');
+			}
+		
 		}
 
 		return (

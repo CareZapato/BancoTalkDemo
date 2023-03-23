@@ -1,4 +1,4 @@
-import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {BrowserRouter, Route, Routes, Redirect} from 'react-router-dom';
 import Login from '../components/Login';
 import SpeechToText from '../components/SpeechToText';
 
