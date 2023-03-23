@@ -24,8 +24,8 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
             <table>
                 <thead>
               <tr>
-                <th>Empresa</th>
-                <th>Deuda Actual</th>
+                <th><b>Empresa</b></th>
+                <th><b>Deuda Actual</b></th>
               </tr>
             </thead>
               <tbody>
@@ -42,7 +42,7 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
             <table>
                 <thead>
               <tr>
-                <th>Total</th>
+                <th><b>Total</b></th>
                 <th>{deudas.deuda_api.totalDeudas}</th>
               </tr>
             </thead>
