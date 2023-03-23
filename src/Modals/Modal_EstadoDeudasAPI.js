@@ -4,6 +4,7 @@ import "./tabla.css";
 
 const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
 
+  if (deudas.deuda_api && deudas.deuda_api.flag === true) {
   return (
     <>
       {showModal && (
@@ -54,6 +55,24 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
       )}
     </>
   );
+} else {
+  return (
+    <>
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content">
+            <span className="close" onClick={handleCloseModal}>
+              &times;
+            </span>
+            <h2>{deudas.deuda_api.message}</h2>
+            <button onClick={handleCloseModal}>Cerrar</button>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
 };
+
 
 export default Modal_EstadoDeudasApi;

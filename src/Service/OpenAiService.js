@@ -83,7 +83,6 @@ function arrayToJson(arr) {
 
 async function formatJson(splitInfo) {
 		let jsonAccion = {};
-		console.log('caso ',splitInfo);
 		switch (splitInfo[1]) {
 				case 'Dep':
 						jsonAccion = {
@@ -149,7 +148,7 @@ async function formatJson(splitInfo) {
 						jsonAccion.rut = splitInfo[2];
 						//const data = localStorage.getItem('credentials') ? JSON.parse(localStorage.getItem('credentials')) : '';
 						jsonAccion.deuda_api = await postAll();
-						console.log('jsonAccion.deuda_api ', jsonAccion.deuda_api);
+						console.log('jsonAccion.deuda_api ',jsonAccion.deuda_api);
 						return jsonAccion;
 				case 'Deu-AM':
 						jsonAccion = {
