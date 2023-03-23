@@ -6,6 +6,7 @@ import Modal_PagoQR from '../Modals/Modal_PagoQR';
 import Modal_PagarDeudas from '../Modals/Modal_PagarDeudas';
 import Modal_EstadoDeudas from '../Modals/Modal_EstadoDeudas';
 import Modal_EstadoDeudasApi from '../Modals/Modal_EstadoDeudasAPI';
+import Modal_EstadoDeudasTag from '../Modals/Modal_EstadoDeudasTag';
 import IonIcon from '@reacticons/ionicons';
 import {languagesList} from '../languages';
 import {modosPromptList} from '../modos';
@@ -36,6 +37,7 @@ function SpeechToText() {
 		const [showModalFive, setShowModalFive] = React.useState(false);
 		const [showModalSix, setShowModalSix] = React.useState(false);
 		const [showModalSeven, setShowModalSeven] = React.useState(false);
+		const [showModalEight, setShowModalEight] = React.useState(false);
 
 		const [resultado, setResultado] = React.useState({});
 
@@ -78,6 +80,10 @@ function SpeechToText() {
 										setResultado(openaiResponse);
 										handleOpenModalSeven();
 										break;
+								case 'Tag-V':
+									setResultado(openaiResponse);
+									handleOpenModalEight();
+									break;
 								default:
 										console.log(`Lo siento, no existe ${openaiResponse.modo}.`);
 						}
@@ -127,6 +133,10 @@ function SpeechToText() {
 				setShowModalSeven(true);
 		};
 
+		const handleOpenModalEight = () => {
+			setShowModalEight(true);
+		};
+
 		const handleCloseModal = () => {
 				setShowModalOne(false);
 				setShowModalTwo(false);
@@ -135,6 +145,7 @@ function SpeechToText() {
 				setShowModalFive(false);
 				setShowModalSix(false);
 				setShowModalSeven(false);
+				setShowModalEight(false);
 		};
 
 		// Función que realiza la conversión de voz a texto
@@ -269,6 +280,7 @@ function SpeechToText() {
 						<Modal_PagarDeudas showModal={showModalFive} handleCloseModal={handleCloseModal} pagar={resultado}/>
 						<Modal_EstadoDeudas showModal={showModalSix} handleCloseModal={handleCloseModal} deudas={resultado}/>
 						<Modal_EstadoDeudasApi showModal={showModalSeven} handleCloseModal={handleCloseModal} deudas={resultado}/>
+						<Modal_EstadoDeudasTag showModal={showModalEight} handleCloseModal={handleCloseModal} deudas_rut={resultado}/>
 				</div>
 		);
 }

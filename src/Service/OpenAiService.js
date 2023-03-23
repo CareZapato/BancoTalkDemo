@@ -1,11 +1,14 @@
 import {cuentas_agregadas} from '../Models/Cuentas';
 import {deudas_servicios} from '../Models/Deudas';
 import {perfil} from '../Models/Perfil';
+import {findDebtsByRut} from '../Service/findDebtByRut'
+
 import {
 		API_KEY,
 		FORMATO_RESPUESTAS_Deudas_Bancos,
 		FORMATO_RESPUESTAS_Servicio_Basicos,
-		FORMATO_RESPUESTAS_transacciones_bancarias
+		FORMATO_RESPUESTAS_transacciones_bancarias,
+		FORMATO_RESPUESTAS_TAGS
 } from '../constants';
 import {generateDeudaAPI} from './DeudasAPIRandomService'
 
@@ -21,6 +24,9 @@ async function getOpenAIInfo(texto, modo) {
 				case '03':
 						textoPrompt = FORMATO_RESPUESTAS_transacciones_bancarias + ' El texto es el siguiente: ' + texto;
 						break;
+				case '04':
+					textoPrompt = FORMATO_RESPUESTAS_TAGS + ' El texto es el siguiente: ' + texto;
+					break;
 				default:
 						console.log(`Lo siento, no existe el modo ${modo}.`);
 		}
@@ -155,6 +161,15 @@ function formatJson(splitInfo) {
 						jsonAccion.rut = splitInfo[2];
 						jsonAccion.lista_pagar = arrayToJson(splitInfo);
 						return jsonAccion;
+				case 'Tag-V':
+						jsonAccion = {
+								'modo': splitInfo[1]
+						};
+						jsonAccion.rut = splitInfo[2];
+						console.log(jsonAccion);
+						const deudasCliente = findDebtsByRut(splitInfo[2]);
+						deudasCliente.modo = splitInfo[1];
+						return deudasCliente;
 				default:
 						console.log(`Lo siento, no existe ${splitInfo[1]}.`);
 		}

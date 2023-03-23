@@ -1,6 +1,17 @@
-export const API_KEY = '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';
+export const API_KEY = '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';
 
 export const RUT_LOGUEADO = "16870871-8";
+
+//*************************** DEUDAS Bancos con promp afinado por chatgpt ********************************** */
+export const FORMATO_RESPUESTAS_TAGS = "Se entregará un texto que explica la peticion de una persona donde que llamaremos TextoEntrada del cual se puede deducir que quiere una de las 2 opciones: A) Pagar deudas de Tags (TAG: dispositivo para cobrar en las vias de transito ); B) Preguntas sobre sus deudas de los Tags; De ambas quiero obtener un texto llamaremos TextoSalida con unos formato específicos descritos a continuación:"+ 
+"A) En caso de que el TextoEntrada contenga algo referente a pagar tags o pagar tag, o pagar deudas de las autopistas, necesito extraer la lista de las deudas a pagar con un detalle de lo que quiere pagar y cuanto acompañado finalmente del rut de la persona, que puede estar dicho de muchas formas pero siempre tendra un formato unico nnnnnnnn-m (rut chileno, donde n es cualquier numero y m puede ser numeros o el valor k. Sin punton si espacios). Para lograr eso necesito que consideres las siguientes instrucciones:"+
+"1) El TextEntrada puede decir que quiere pagar todas sus tags, como por ejemplo, 'necesito pagar todas mis tags' o 'quiero pagar las deudas de las autopistas'. En este caso se asume que quiere pagar todo de todas las deudas que tenga asociado y el TextoSalida debe ser el siguiente: ;Tag-T;rut."+
+"2) El TextEntrada puede decir que quiere pagar solo un monto de cierta deuda o tag, los distintos tags se diferencias por sus nombres ,puede decirlo repetidamente si son distintos nombres, como por ejemplo, 'quiero pagar el tag Costanera Norte con 5000 y la Autopista Central completa'. Esto puede repetirse y variar dentro del texto varias veces nombrando distintas nombres de tags. En este caso el TextoSalida que necesito para N tags: ;Tag-AM;nombre_tag_01;monto_02;nombre_tag_02;monto_02;nombre_tag_03;monto_03;nombre_tag_N;monto_n;rut. Tener en cuenta que si no nombra el monto se asume que es el total de la deuda de ese tag y eso hara que el el valor monto sea reemplazado por 'total'. Lo mismo si dice que quiere pagar el total de la deuda. "+
+"B) En caso de que el TextoEntrada pregunta por una lista de sus tags o deudas de autopistas, o un detalle de sus deudas, como por ejemplo, 'quiero saber cuales son todas mis deudas en tags' o 'quiero saber cuanto debo', o tambien, 'quiero saber cuanto debo en tag', etc. El TextoSalida debe ser el siguiente texto sin nada mas y sin un texto que lo acompañe para ser presentado. El texto de salida debe comenzar con un punto y coma, el string Tag-V y punta y coma nuevamente: ;Tag-V;rut;"+
+"Recuerda que sólo debe entregarme el TextoSalida dependiendo las descipciones descritas, no agregar mas información que la que aparezca en el TextoEntrada (no agregar mas valores, nombres, entidades, montos, etc). Además tener en cuenta la forma de hablar, es posible que diga 'quiero pagar el tag de la autopista...' o 'mis deudas del tag...' y quiere decir que autopista o nombre estoy buscando. Los ejemplos pueden tener muchas variedades pero no debe variar el formato de TextoSalida esperado."+
+"Si dentro de las palabras claves del TextoEntrada estan: Tax, Tac, taxs, tacs, quiere secir realmente Tag, por lo que es necesario comprobar eso."+
+"Recordar que el formato del rut es sin puntos y con guion."+
+"Dentro de las palabras claves del TextoEntrada estan: Tag, Tags, Pagar, Deudas, Autopistas, monto, deuda, saber.";
 
 
 //*************************** DEUDAS Bancos con promp afinado por chatgpt ********************************** */

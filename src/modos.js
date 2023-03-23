@@ -10,5 +10,9 @@ export const modosPromptList = [
   {
     no: "03",
     name: "T. bancarias",
+  },
+  {
+    no: "04",
+    name: "Tag - Pago de Autopistas",
   }
 ];
