@@ -25,8 +25,8 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
             <table>
                 <thead>
               <tr>
-                <th><b>Empresa</b></th>
-                <th><b>Deuda Actual</b></th>
+                <th><h3>Empresa</h3></th>
+                <th><h3>Deuda Actual</h3></th>
               </tr>
             </thead>
               <tbody>
@@ -43,13 +43,13 @@ const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
             <table>
                 <thead>
               <tr>
-                <th><b>Total</b></th>
-                <th>{deudas.deuda_api.totalDeudas}</th>
+                <th><h3>Total</h3></th>
+                <th className="saldo">{deudas.deuda_api.totalDeudas}</th>
               </tr>
             </thead>
             </table>
             <button onClick={handleCloseModal}>Cancelar</button>
-            <button>Confirmar</button>
+            <button onClick={handleCloseModal}>Confirmar</button>
           </div>
         </div>
       )}
