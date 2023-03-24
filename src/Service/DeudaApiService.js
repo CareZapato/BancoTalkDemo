@@ -1,17 +1,16 @@
-async function postAll() {
+async function postAll(data) {
 	try {
 		let response = await fetch('http://localhost:3800/api/general/all', {
 		method: 'POST',
 		headers: {
 				'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({"rut": "26247043-1", "password": "xxxxxx"})
+		body: JSON.stringify({"rut": formatRut(data.rut), "password": data.password})
 		});
 
-		const result = await response.json() ? await response.json() : response;
-		response = {...result.payload ? result.payload : response, flag: true };
-
-return response.payload;
+		let result = await response.json();
+		result = {...result.payload, flag: true };
+return result;
 
 	} catch (errores) {
 		const error = {
@@ -23,4 +22,8 @@ return response.payload;
 	}
 };
 
-export { postAll };
+function formatRut(data) { 
+	return data.slice(0, -1) + "-" +  data.slice(-1);
+};
+
+export {postAll};

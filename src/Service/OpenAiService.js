@@ -146,8 +146,8 @@ async function formatJson(splitInfo) {
 								'modo': splitInfo[1]
 						};
 						jsonAccion.rut = splitInfo[2];
-						//const data = localStorage.getItem('credentials') ? JSON.parse(localStorage.getItem('credentials')) : '';
-						jsonAccion.deuda_api = await postAll();
+						const info = { rut: localStorage.getItem('rut') , password: localStorage.getItem('password')};
+						jsonAccion.deuda_api = await postAll(info);
 						console.log('jsonAccion.deuda_api ',jsonAccion.deuda_api);
 						return jsonAccion;
 				case 'Deu-AM':
