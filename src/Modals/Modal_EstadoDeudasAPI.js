@@ -4,7 +4,7 @@ import "./tabla.css";
 
 const Modal_EstadoDeudasApi = ({ showModal, handleCloseModal, deudas }) => {
 
-  if (deudas.deuda_api && deudas.deuda_api.flag === true) {
+  if (deudas.deuda_api?.flag == true) {
   return (
     <>
       {showModal && (

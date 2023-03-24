@@ -1,5 +1,3 @@
-
-
 export const postLogin = async ({ rut, password }) => {
 	const payload = {
 		rut,

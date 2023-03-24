@@ -5,13 +5,12 @@ async function postAll(data) {
 		headers: {
 				'Content-Type': 'application/json'
 		},
-		body: JSON.stringify({"rut": data.rut, "password": data.password})
+		body: JSON.stringify({"rut": formatRut(data.rut), "password": data.password})
 		});
 
-		const result = await response.json() ? await response.json() : response;
-		response = {...result.payload ? result.payload : response, flag: true };
-
-return response.payload;
+		let result = await response.json();
+		result = {...result.payload, flag: true };
+return result;
 
 	} catch (errores) {
 		const error = {
@@ -21,6 +20,10 @@ return response.payload;
 		}
 		return error;
 	}
+};
+
+function formatRut(data) { 
+	return data.slice(0, -1) + "-" +  data.slice(-1);
 };
 
 export {postAll};
